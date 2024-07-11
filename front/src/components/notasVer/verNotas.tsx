@@ -25,8 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "./tableComp";
-import { data } from "src/data/newData";
-import { columns } from "./columns";
+import { columns, usePreNotas } from "./columns";
 import { Toolbar } from "./toolbar"; // Importe o componente Toolbar
 
 // Função de filtragem global para considerar diferentes tipos de dados
@@ -49,6 +48,7 @@ const globalFilterFn: FilterFn<any> = (row, columnId, filterValue) => {
 };
 
 export function VerNotas() {
+  const { data, isLoading, error } = usePreNotas(); // Usa os dados da API
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -56,7 +56,7 @@ export function VerNotas() {
   const [globalFilter, setGlobalFilter] = React.useState<string>("");
 
   const table = useReactTable({
-    data,
+    data: data || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -81,8 +81,16 @@ export function VerNotas() {
     },
   });
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
-    <div className="w-[80vw] h-[80vh] m-32">
+    <div className="w-[85vw] h-[85vw] m-32">
       <Toolbar table={table} />
       <div className="rounded-md border bg-card">
         <Table>
@@ -103,7 +111,7 @@ export function VerNotas() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -119,7 +127,7 @@ export function VerNotas() {
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  No results found.
                 </TableCell>
               </TableRow>
             )}

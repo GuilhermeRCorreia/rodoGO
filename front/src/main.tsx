@@ -2,58 +2,38 @@
 import { ThemeProvider } from "./components/theme-provider";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from 'react-query'; // Importação do React Query
 import "./globals.css";
+import Login from "./components/login/login";
 import See from "./routes/see";
 import Include from "./routes/include";
-import Login from "./components/login/login";
-import Movies from "./routes/movies";
 
 const router = createBrowserRouter([
-
   {
     path: "/",
-    element: (
-      <div className="w-screen h-screen">
-        {" "}
-        <Login />
-      </div>
-    ),
+    element: <div className="w-screen h-screen"><Login /></div>,
   },
   {
     path: "/prenota",
-    element: (
-      <div className="w-screen h-screen">
-        {" "}
-        <See />
-      </div>
-    ),
+    element: <div className="w-screen h-screen"><See /></div>,
   },
   {
     path: "/prenota/incluir",
-    element: (
-      <div className="w-screen h-screen">
-        {" "}
-        <Include />
-      </div>
-    ),
-  },
-  {
-    path: "/movies",
-    element: (
-      <div className="w-screen h-screen">
-        {" "}
-        <Movies />
-      </div>
-    ),
+    element: <div className="w-screen h-screen"><Include /></div>,
   },
 ]);
-ReactDOM.createRoot(document.getElementById("root")).render(
 
+// Criação da instância do QueryClient
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    {" "}
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <RouterProvider router={router} />{" "}
+      {/* Envolver o RouterProvider com QueryClientProvider */}
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

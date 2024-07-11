@@ -1,6 +1,7 @@
 {
   "name": "front",
   "private": true,
+  "proxy": "http://localhost:8080",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -29,6 +30,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.1",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.24.1",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
